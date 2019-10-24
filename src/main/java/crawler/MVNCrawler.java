@@ -113,7 +113,7 @@ public class MVNCrawler {
             String loadUrl = element.attr("href") + "/" + jarName;
 
             logger.info("download from " + loadUrl);
-            String result = FileUtil.downloadFile(loadUrl, jarName.substring(1));
+            String result = FileUtil.downloadFile(loadUrl, jarName);
             if ("error".equals(result)) {
                 logger.error("download error");
             } else {
