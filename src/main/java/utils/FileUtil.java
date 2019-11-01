@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @author: eumes
@@ -61,7 +65,59 @@ public class FileUtil {
         return "success";
     }
 
-    public static void main(String[] args) {
-        System.out.println(downloadFile("", ""));
+    /**
+     * 寻找指定目录下，具有指定后缀名的所有文件。
+     *
+     * @param filenameSuffix : 文件后缀名
+     * @param currentDirUsed : 当前使用的文件目录
+     * @param currentFilenameList ：当前文件名称的列表
+     */
+    public static void findFiles(String filenameSuffix, String currentDirUsed,
+                          List<String> currentFilenameList) {
+        File dir = new File(currentDirUsed);
+        if (!dir.exists() || !dir.isDirectory()) {
+            return;
+        }
+
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                /**
+                 * 如果目录则递归继续遍历
+                 */
+                findFiles(filenameSuffix,file.getAbsolutePath(), currentFilenameList);
+            } else {
+                /**
+                 * 如果不是目录。
+                 * 那么判断文件后缀名是否符合。
+                 */
+                if (file.getAbsolutePath().endsWith(filenameSuffix)) {
+                    currentFilenameList.add(file.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取jar包目录下所有的class文件数量
+     *
+     * @param jarPath jar包的路径+名称
+     * @return 返回对应jar包所有.class文件的数量
+     */
+    public static int countJarClassFiles(String jarPath) throws IOException {
+        int count = 0;
+        JarFile jarFile = new JarFile(jarPath);
+        Enumeration<JarEntry> entries = jarFile.entries();
+        while (entries.hasMoreElements()) {
+            JarEntry jarEntry = entries.nextElement();
+            if (jarEntry.getName().endsWith(".class")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println(countJarClassFiles("D:\\tmp\\jbpm-flow-7.28.0.Final.jar"));
+//        System.out.println(downloadFile("", ""));
     }
 }

@@ -14,7 +14,8 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>crawler.MVNCrawler</mainClass>
+                            <!--<mainClass>crawler.MVNCrawler</mainClass>-->
+                            <mainClass>scanner.BatchScan</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
